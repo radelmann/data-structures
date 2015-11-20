@@ -8,13 +8,13 @@ HashTable.prototype.insert = function(k, v) {
   if (this._count===this._limit) {
     this._limit = this._limit*2;
   }
+  
   var index = getIndexBelowMaxForKey(k, this._limit);
   var bucket = this._storage.get(index);
-  if (typeof bucket === 'undefined') {
-    bucket = {};
-  }
+  bucket = bucket || {};
   bucket[k] = v;
   this._storage.set(index, bucket);
+  this._count++;
 };
 
 HashTable.prototype.retrieve = function(k) {
@@ -27,6 +27,7 @@ HashTable.prototype.remove = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
   var bucket = this._storage.get(index);
   delete bucket[k];
+  this._count--;
  };
 
 /*
