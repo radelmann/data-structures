@@ -23,9 +23,9 @@ HashTable.prototype.retrieve = function(k) {
   bucket = bucket || [];
   var value;
 
-  _.each(bucket, function(item) {
-    if (item[0]===k) {
-      value = item[1];
+  _.each(bucket, function(tuple) {
+    if (tuple[0]===k) {
+      value = tuple[1];
     }
   });
   
@@ -38,8 +38,8 @@ HashTable.prototype.remove = function(k) {
   var bucket = this._storage.get(index);
   var deleted;
 
-  _.each(bucket, function(item,index,collection) {
-    if (item[0]===k) {
+  _.each(bucket, function(tuple,index,collection) {
+    if (tuple[0]===k) {
        deleted = collection.splice(index,1);
     }
   });
