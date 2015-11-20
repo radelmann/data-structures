@@ -5,13 +5,13 @@ var BinarySearchTree = function(value) {
   tree.left = null;
   tree.right = null;
 
-  _.extend(tree, treeMethods);
+  _.extend(tree, bTreeMethods);
   return tree;
 };
 
-treeMethods = {};
+bTreeMethods = {};
 
-treeMethods.insert = function (value) {
+bTreeMethods.insert = function (value) {
   if (value < this.value) {
     if (this.left === null) {
       this.left = BinarySearchTree(value);
@@ -27,7 +27,7 @@ treeMethods.insert = function (value) {
   }
 }
 
-treeMethods.contains = function (value) {
+bTreeMethods.contains = function (value) {
   var found = false;
 
   if (this.value===value) {
@@ -41,7 +41,7 @@ treeMethods.contains = function (value) {
   return found;
 }
 
-treeMethods.depthFirstLog = function (cb) {
+bTreeMethods.depthFirstLog = function (cb) {
   //iterate over each tree node calling cb
   cb(this.value);
 
