@@ -14,15 +14,14 @@ HashTable.prototype.checkResize = function() {
 
 HashTable.prototype.resize = function(newLimit) {
   var oldStorage = this._storage;
-  var ht = this;
   this._storage = LimitedArray(newLimit);
   this._limit = newLimit;
   this._count = 0;
   oldStorage.each(function(bucket) {
     _.each(bucket, function(tuple) {
-      ht.insert.call(ht, tuple[0], tuple[1], false);
-    });
-  });
+      this.insert(tuple[0], tuple[1], false);
+    }.bind(this));
+  }.bind(this));
 }
 
 HashTable.prototype.insert = function(k, v, check) {
