@@ -25,16 +25,24 @@ HashTable.prototype.resize = function(newLimit) {
 }
 
 HashTable.prototype.insert = function(k, v, check) {
-  this._count++;
-  check = (check === undefined) ? true : false;
-
   var index = getIndexBelowMaxForKey(k, this._limit);
-
   var bucket = this._storage.get(index);
   bucket = bucket || [];
+
+  //check if exists, then update
+  for (var i = 0; i < bucket.length; i++) {
+    var tuple = bucket[i];
+    if (tuple[0] === k) {
+      tuple[1] = v;
+      return;
+    }
+  };
+
   bucket.push([k, v]);
   this._storage.set(index, bucket);
 
+  this._count++;
+  check = (check === undefined) ? true : false;
   if (check) {
     this.checkResize();
   }
@@ -42,34 +50,36 @@ HashTable.prototype.insert = function(k, v, check) {
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-
   var bucket = this._storage.get(index);
   bucket = bucket || [];
-  var value;
 
-  _.each(bucket, function(tuple) {
+  for (var i = 0; i < bucket.length; i++) {
+    var tuple = bucket[i];
     if (tuple[0] === k) {
-      value = tuple[1];
+      return tuple[1];
     }
-  });
+  };
 
-  return value;
+  return;
 };
 
 HashTable.prototype.remove = function(k) {
-  this._count--;
-
   var index = getIndexBelowMaxForKey(k, this._limit);
   var bucket = this._storage.get(index);
   var deleted;
 
-  _.each(bucket, function(tuple, index, collection) {
+  for (var i = 0; i < bucket.length; i++) {
+    var tuple = bucket[i];
     if (tuple[0] === k) {
-      deleted = collection.splice(index, 1);
+      deleted = i;
+      break;
     }
-  });
+  };
 
-  // check resize
+  deleted = bucket.splice(deleted, 1);
+  this._storage.set(index, bucket);  
+
+  this._count--;
   this.checkResize();
   return deleted;
 };
