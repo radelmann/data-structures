@@ -32,7 +32,7 @@ bloomFilter.prototype.test = function(value) {
 
 bloomFilter.prototype._hash = function(value) {
   //return array of hash indexes for input value, using this._m and this._k
-
+    value += '';
   // Fowler/Noll/Vo hashing.
   function fnv_1a(v) {
     var a = 2166136261;
