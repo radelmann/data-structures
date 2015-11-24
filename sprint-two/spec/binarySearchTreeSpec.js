@@ -56,4 +56,23 @@ describe('binarySearchTree', function() {
     binarySearchTree.breadthFirstLog(func);
     expect(array).to.deep.equal([5,6,7,8,9,10,11,12,13,14,15]);
   });
+
+  it('should rebalance', function(){
+    binarySearchTree = BinarySearchTree(7);
+    binarySearchTree.insert(8);
+    binarySearchTree.insert(6);
+    binarySearchTree.insert(5);
+    binarySearchTree.insert(4);
+    binarySearchTree.insert(3);
+    binarySearchTree.insert(2);
+    binarySearchTree.insert(1);
+    binarySearchTree.insert(0);
+    binarySearchTree.rebalance();
+
+    var array = [];
+    var func = function(value){ array.push(value); };
+
+    binarySearchTree.depthFirstLog(func);
+    expect(array).to.deep.equal([ 4, 3, 2, 1, 0, 5, 8, 6, 7 ]);
+  });
 });

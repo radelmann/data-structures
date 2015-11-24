@@ -1,21 +1,23 @@
 var BinarySearchTree = function(value) {
   var tree = Object.create(Object);
-
-  tree.value = value;
-  tree.left = null;
-  tree.right = null;
-  tree.nodeCount = 1;
-
   _.extend(tree, bTreeMethods);
+  tree._init(value);
   return tree;
 };
 
 bTreeMethods = {};
 
-bTreeMethods.checkBalance = function() {
-  //rebalance as soon as the max depth is 
+bTreeMethods._init = function(value) {
+  this.value = value;
+  this.left = null;
+  this.right = null;
+  this.nodeCount = 1;
+}
+
+bTreeMethods.rebalance = function() {
+  //rebalance if the max depth is 
   //more than twice the minimum depth
-  var minDepth = this.calcMinDepth();
+  var minDepth = this._calcMinDepth();
 
   if (this.nodeCount > 2 * minDepth) {
     //rebalance
@@ -26,37 +28,25 @@ bTreeMethods.checkBalance = function() {
     this.breadthFirstLog(func);
 
     var mid = Math.floor(array.length / 2);
-    var newTree = BinarySearchTree(mid)
+    var nodeCount = this.nodeCount;
+    this._init(array[mid]);
 
     var i = 1;
-    
-    while (newTree.nodeCount < this.nodeCount) {
-      if (array[mid - i] !== null) newTree.insert(array[mid - i]);
-      if (array[mid + i] !== null) newTree.insert(array[mid + i]);
+    while (this.nodeCount < nodeCount) {
+      if (array[mid - i] !== undefined) this.insert(array[mid - i]);
+      if (array[mid + i] !== undefined) this.insert(array[mid + i]);
       i++;
     }
-    this = newTree;
   }
 }
 
-bTreeMethods.calcMinDepth = function() {
-
+bTreeMethods._calcMinDepth = function() {
   var minDepth = function(node) {
     if (node === null) return 0;
-
-    if (node.left === null && node.right === null) {
-      return 1;
+    if ((node.left === null) || (node.right === null)) {
+      return 1 + Math.max(minDepth(node.left), minDepth(node.right));
     }
-
-    if (!node.left) {
-      return minDepth(node.right) + 1;
-    }
-
-    if (!node.right) {
-      return minDepth(node.left) + 1;
-    }
-
-    return Math.min(minDepth(node.left), minDepth(node.right));
+    return 1 + Math.min(minDepth(node.left), minDepth(node.right));
   }
 
   return minDepth(this);
@@ -76,7 +66,8 @@ bTreeMethods.insert = function(value) {
       this.right.insert(value);
     }
   }
-  this.nodeCount + 1;
+
+  this.nodeCount++;
 }
 
 bTreeMethods.contains = function(value) {
@@ -108,7 +99,6 @@ bTreeMethods.depthFirstLog = function(cb) {
 
 bTreeMethods.breadthFirstLog = function(cb) {
     //iterate over each tree node calling cb
-
     var queue = [];
     queue.push(this);
     for (var i = 0; i < queue.length; i++) {
