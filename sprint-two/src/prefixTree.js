@@ -1,5 +1,4 @@
-// The PrefixTree that can handle autocomplete for T9-style texting
-var keys = {
+var keysT9 = {
   'a': 2,
   'b': 2,
   'c': 2,
@@ -28,18 +27,48 @@ var keys = {
   'z': 9
 };
 
-var PrefixTree = function() {
+var keysAZ = {
+  'a': 'a',
+  'b': 'b',
+  'c': 'c',
+  'd': 'd',
+  'e': 'e',
+  'f': 'f',
+  'g': 'g',
+  'h': 'h',
+  'i': 'i',
+  'j': 'j',
+  'k': 'k',
+  'l': 'l',
+  'm': 'm',
+  'n': 'n',
+  'o': 'o',
+  'p': 'p',
+  'q': 'q',
+  'r': 'r',
+  's': 's',
+  't': 't',
+  'u': 'u',
+  'v': 'v',
+  'w': 'w',
+  'x': 'x',
+  'y': 'y',
+  'z': 'z'
+};
+
+var PrefixTree = function(t9) {
+  this.t9 = (t9 === undefined) ? true : t9;
+  this.keys = this.t9 ? keysT9 : keysAZ;
+
   this.children = {};
   this.words = [];
 };
 
-// Traverse the tree to the node where the word should be inserted. If any
-// needed nodes do not exist along the way, they are created.
 PrefixTree.prototype.insert = function(word, charIndex) {
   word = word.toLowerCase();
   charIndex = charIndex || 0;
-  var key = keys[word.charAt(charIndex)];
-  this.children[key] = this.children[key] || new PrefixTree();
+  var key = this.keys[word.charAt(charIndex)];
+  this.children[key] = this.children[key] || new PrefixTree(this.t9);
   //check if end of word
   if (word.length - 1 === charIndex) {
     //end of word - push if it's not already there
@@ -51,27 +80,37 @@ PrefixTree.prototype.insert = function(word, charIndex) {
   }
 };
 
-// Traverse the tree based on the key digits in keyString, to find the node
-// where relevant words are stored.
-PrefixTree.prototype.getSuggestions = function(keyString, suggestionDepth, charIndex) {
+PrefixTree.prototype.getSuggestions = function(keyString, suggestionDepth) {
   //navigate to tree node at the end of key string
   //from there recursively traverse all nodes taking into account suggestionDepth
   //adding all words to the results array
-  
-  suggestionDepth = suggestionDepth || 10; //default
-  var results = [];
-  charIndex = charIndex || 0;
-  var key = keyString.charAt(charIndex);
 
-  if (charIndex >= keyString.length - 1) {
-    if (charIndex < keyString.length + suggestionDepth)
-      for (var child in this.children) {
-        results = results.concat(this.children[child].words);
-        results = results.concat(this.children[child].getSuggestions(keyString, suggestionDepth, charIndex + 1));
-      }
+  suggestionDepth = (typeof suggestionDepth === undefined) ? 3 : suggestionDepth;
+
+  var results = [];
+  var key = keyString.charAt(0);
+
+  if (keyString.length === 1) {
+    results = results.concat(this.children[key].words);
+    _.each(this.children[key].children, function(child) {
+      results = results.concat(child._traverse(suggestionDepth));
+    });
   } else {
-    results = results.concat(this.children[key].getSuggestions(keyString, suggestionDepth, charIndex + 1));
+    results = results.concat(this.children[key].getSuggestions(keyString.slice(1), suggestionDepth));
   }
 
   return results;
 };
+
+PrefixTree.prototype._traverse = function(suggestionDepth) {
+  var results = [];
+
+  results = results.concat(this.words);
+
+  if (suggestionDepth > 1) {
+    _.each(this.children, function(child) {
+      results = results.concat(child._traverse(suggestionDepth - 1));
+    });
+  }
+  return results;
+}
