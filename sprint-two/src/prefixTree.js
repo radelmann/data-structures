@@ -59,7 +59,6 @@ var keysAZ = {
 var PrefixTree = function(t9) {
   this.t9 = (t9 === undefined) ? true : t9;
   this.keys = this.t9 ? keysT9 : keysAZ;
-
   this.children = {};
   this.words = [];
 };
@@ -89,14 +88,15 @@ PrefixTree.prototype.getSuggestions = function(keyString, suggestionDepth) {
 
   var results = [];
   var key = keyString.charAt(0);
+  var node = this.children[key];
 
   if (keyString.length === 1) {
-    results = results.concat(this.children[key].words);
-    _.each(this.children[key].children, function(child) {
+    results = results.concat(node.words);
+    _.each(node.children, function(child) {
       results = results.concat(child._traverse(suggestionDepth));
     });
   } else {
-    results = results.concat(this.children[key].getSuggestions(keyString.slice(1), suggestionDepth));
+    results = results.concat(node.getSuggestions(keyString.slice(1), suggestionDepth));
   }
 
   return results;
