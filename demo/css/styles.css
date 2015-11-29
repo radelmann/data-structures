@@ -1,18 +1,16 @@
 body {
-  width:100%;
+  width: 100%;
+  color: #333;
 }
-
 .container {
   width: 800px;
   margin-right: auto;
   margin-left: auto;
   text-align: center;
 }
-
 .t9 {
-  margin:5px;
+  margin: 5px;
 }
-
 .btn {
   opacity: .7;
   border-radius: 5px;
@@ -20,19 +18,22 @@ body {
 .btn:hover {
   opacity: 1;
 }
-
 .phone-btn {
   width: 50px;
   height: 80px;
   padding-bottom: 30px;
   margin: 2px;
 }
-
 .t9-message {
-  width:130px;
+  width: 130px;
 }
-
 h1 {
   font-size: 30px;
-  margin:8px;
+  margin: 8px;
+  color: #333;
+  font-weight: 500;
+}
+.delete {
+  color: red;
+  font-weight: bold;
 }
