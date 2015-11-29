@@ -1,0 +1,43 @@
+body {
+  width:100%;
+}
+
+.container {
+  width: 800px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.t9 {
+  margin:5px;
+}
+
+.btn {
+  opacity: .7;
+}
+
+.btn:hover {
+  opacity: 1;
+}
+
+.phone-btn {
+  width: 50px;
+  height: 80px;
+  padding-bottom: 30px;
+  margin: 2px;
+  border-radius: 20px;
+}
+
+.t9-message {
+  width:130px;
+}
+
+h1 {
+  font-size: 30px;
+  margin:8px;
+}
+
+.delete {
+  color: red;
+}

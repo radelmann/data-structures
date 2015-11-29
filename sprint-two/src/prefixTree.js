@@ -84,7 +84,7 @@ PrefixTree.prototype.getSuggestions = function(keyString, suggestionDepth) {
   //from there recursively traverse all nodes taking into account suggestionDepth
   //adding all words to the results array
 
-  suggestionDepth = (typeof suggestionDepth === undefined) ? 3 : suggestionDepth;
+  suggestionDepth = (suggestionDepth === undefined) ? 3 : suggestionDepth;
 
   var results = [];
   var key = keyString.charAt(0);
